@@ -509,6 +509,194 @@
             color: rgba(255,255,255,0.6);
         }
 
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-hover);
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 450px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-hover);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: var(--gradient-1);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .chat-status {
+            width: 8px;
+            height: 8px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 0.5rem;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .user .message-avatar {
+            background: var(--gray);
+        }
+
+        .message-content {
+            background: var(--gray-light);
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .user .message-content {
+            background: var(--primary);
+            color: white;
+            border-radius: 15px 15px 5px 15px;
+        }
+
+        .bot .message-content {
+            border-radius: 15px 15px 15px 5px;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary);
+        }
+
+        .chat-send {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send:hover {
+            transform: scale(1.1);
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .quick-reply {
+            background: white;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .quick-reply:hover {
+            background: var(--primary);
+            color: white;
+        }
+
         /* Mobile Menu */
         .mobile-menu {
             display: none;
@@ -571,6 +759,11 @@
 
             .cta-content h2 {
                 font-size: 2rem;
+            }
+
+            .chat-window {
+                width: 320px;
+                height: 400px;
             }
         }
 
@@ -804,7 +997,217 @@
         </div>
     </footer>
 
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-toggle" id="chatToggle">
+            <i class="fas fa-comments"></i>
+        </button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <div class="chat-status"></div>
+                <h3>Asistente MayorLink</h3>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="chat-message bot">
+                    <div class="message-avatar">ML</div>
+                    <div class="message-content">
+                        ¡Hola! 👋 Soy el asistente de MayorLink. ¿En qué puedo ayudarte hoy?
+                        <div class="quick-replies">
+                            <div class="quick-reply" data-reply="¿Cómo funciona MayorLink?">¿Cómo funciona MayorLink?</div>
+                            <div class="quick-reply" data-reply="¿Cuáles son los costos?">¿Cuáles son los costos?</div>
+                            <div class="quick-reply" data-reply="¿Cómo me registro?">¿Cómo me registro?</div>
+                            <div class="quick-reply" data-reply="Soporte técnico">Soporte técnico</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Escribe tu mensaje...">
+                <button class="chat-send" id="chatSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Respuestas predefinidas del chat
+        const chatResponses = {
+            "¿cómo funciona mayorlink?": {
+                text: "MayorLink funciona en 3 pasos simples: 1) Te registras y verificamos tu cuenta, 2) Conectas con compradores o mayoristas, 3) Realizas transacciones seguras. ¿Te gustaría saber más sobre algún paso en particular?",
+                quickReplies: ["Proceso de verificación", "Encontrar compradores", "Seguridad en pagos"]
+            },
+            "¿cuáles son los costos?": {
+                text: "¡Excelente pregunta! 💰 El registro es completamente gratuito. Solo cobramos una pequeña comisión del 2.5% por transacción exitosa. Sin cuotas mensuales ni costos ocultos.",
+                quickReplies: ["Planes premium", "Métodos de pago", "¿Hay descuentos?"]
+            },
+            "¿cómo me registro?": {
+                text: "¡Es muy fácil! 🚀 Solo haz clic en 'Registrarse', completa tus datos básicos, verifica tu email y listo. El proceso toma menos de 5 minutos.",
+                quickReplies: ["Documentos necesarios", "Verificación de cuenta", "Empezar ahora"]
+            },
+            "soporte técnico": {
+                text: "Nuestro equipo técnico está disponible 24/7 para ayudarte. 🛠️ Puedes contactarnos por WhatsApp: +51 987-654-321 o email: soporte@mayorlink.com",
+                quickReplies: ["WhatsApp", "Email", "Centro de ayuda"]
+            },
+            "proceso de verificación": {
+                text: "La verificación incluye: ✅ Validación de identidad, ✅ Verificación de empresa, ✅ Referencias comerciales. Todo el proceso es seguro y toma 24-48 horas.",
+                quickReplies: ["Documentos requeridos", "Tiempo de aprobación", "¿Es seguro?"]
+            },
+            "encontrar compradores": {
+                text: "Nuestra plataforma usa algoritmos inteligentes para conectarte con compradores ideales según tu ubicación, productos y capacidad. ¡También puedes buscar activamente!",
+                quickReplies: ["Filtros de búsqueda", "Notificaciones", "Cómo destacar"]
+            },
+            "seguridad en pagos": {
+                text: "🔒 Usamos encriptación bancaria y retenemos el pago hasta que confirmes la entrega. Trabajamos con Visa, Mastercard y bancos locales.",
+                quickReplies: ["Métodos aceptados", "Protección al vendedor", "Tiempos de liberación"]
+            },
+            "planes premium": {
+                text: "¡Tenemos planes premium con beneficios adicionales! 🌟 Comisiones reducidas (1.5%), análisis avanzados y soporte prioritario. ¿Te interesa?",
+                quickReplies: ["Ver precios", "Beneficios completos", "Prueba gratuita"]
+            },
+            "default": {
+                text: "Entiendo tu consulta. Para una respuesta más específica, te recomiendo contactar a nuestro equipo especializado:",
+                quickReplies: ["Llamar ahora", "WhatsApp", "Email", "Agendar reunión"]
+            }
+        };
+
+        // Variables del chat
+        let chatOpen = false;
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatBody = document.getElementById('chatBody');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+
+        // Toggle del chat
+        chatToggle.addEventListener('click', function() {
+            chatOpen = !chatOpen;
+            if (chatOpen) {
+                chatWindow.classList.add('active');
+                chatToggle.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                chatWindow.classList.remove('active');
+                chatToggle.innerHTML = '<i class="fas fa-comments"></i>';
+            }
+        });
+
+        // Función para agregar mensaje
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user' : 'bot'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? 'TU' : 'ML';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            
+            if (typeof content === 'string') {
+                messageContent.textContent = content;
+            } else {
+                messageContent.innerHTML = content.text;
+                
+                if (content.quickReplies) {
+                    const quickRepliesDiv = document.createElement('div');
+                    quickRepliesDiv.className = 'quick-replies';
+                    
+                    content.quickReplies.forEach(reply => {
+                        const replyBtn = document.createElement('div');
+                        replyBtn.className = 'quick-reply';
+                        replyBtn.textContent = reply;
+                        replyBtn.setAttribute('data-reply', reply);
+                        quickRepliesDiv.appendChild(replyBtn);
+                    });
+                    
+                    messageContent.appendChild(quickRepliesDiv);
+                }
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            chatBody.appendChild(messageDiv);
+            
+            // Scroll al final
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        // Función para obtener respuesta
+        function getBotResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // Buscar respuesta exacta o similar
+            for (let key in chatResponses) {
+                if (message.includes(key.toLowerCase()) || key.toLowerCase().includes(message)) {
+                    return chatResponses[key];
+                }
+            }
+            
+            // Respuestas específicas para palabras clave
+            if (message.includes('precio') || message.includes('costo') || message.includes('pagar')) {
+                return chatResponses["¿cuáles son los costos?"];
+            }
+            if (message.includes('registr') || message.includes('cuenta') || message.includes('sign')) {
+                return chatResponses["¿cómo me registro?"];
+            }
+            if (message.includes('funciona') || message.includes('como') || message.includes('que es')) {
+                return chatResponses["¿cómo funciona mayorlink?"];
+            }
+            if (message.includes('ayuda') || message.includes('soporte') || message.includes('problema')) {
+                return chatResponses["soporte técnico"];
+            }
+            if (message.includes('hola') || message.includes('saludos') || message.includes('buenos')) {
+                return {
+                    text: "¡Hola! 😊 Me da mucho gusto saludarte. Estoy aquí para ayudarte con cualquier duda sobre MayorLink. ¿En qué puedo asistirte?",
+                    quickReplies: ["¿Cómo funciona?", "Costos", "Registro", "Soporte"]
+                };
+            }
+            if (message.includes('gracias') || message.includes('thank')) {
+                return {
+                    text: "¡De nada! 🙏 Ha sido un placer ayudarte. Si tienes más preguntas, estaré aquí para asistirte.",
+                    quickReplies: ["Más información", "Contacto directo", "Cerrar chat"]
+                };
+            }
+            
+            return chatResponses.default;
+        }
+
+        // Enviar mensaje
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                chatInput.value = '';
+                
+                // Simular delay de respuesta
+                setTimeout(() => {
+                    const response = getBotResponse(message);
+                    addMessage(response);
+                }, 500);
+            }
+        }
+
+        // Event listeners
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Manejar clicks en respuestas rápidas
+        chatBody.addEventListener('click', function(e) {
+            if (e.target.classList.contains('quick-reply')) {
+                const reply = e.target.getAttribute('data-reply');
+                addMessage(reply, true);
+                
+                setTimeout(() => {
+                    const response = getBotResponse(reply);
+                    addMessage(response);
+                }, 500);
+            }
+        });
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
